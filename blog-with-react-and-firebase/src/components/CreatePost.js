@@ -1,5 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./createPost.css";
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { useNavigate } from "react-router-dom";
+
+const CreatePost = ({ isAuth }) => {
+  const [title, setTitle] = useState();
+  const [postText, setPostText] = useState();
+
+  const navigate = useNavigate();
+
+  const createPost = async () => {
+    await addDoc(collection(db, "posts"), {
+      title: title,
+      postsText: postText,
+      author: {
+        username: auth.currentUser.displayName,
+        id: auth.currentUser.uid,
+      },
+    });
+    navigate("/");
+  };
+
 
   return (
     <div className="createPostPage">
